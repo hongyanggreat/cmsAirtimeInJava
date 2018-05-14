@@ -1,0 +1,116 @@
+<%-- 
+    Document   : formSearch
+    Created on : Sep 15, 2017, 11:56:57 AM
+    Author     : Admin
+--%>
+
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.LinkedHashMap"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.Map"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+
+<form action="<%= action%>" name="myform" method="get" class="form-horizontal">
+    
+    <div class="control-group">
+        <label class="control-label">Giá tiền</label>
+        <div class="controls">
+            <select class="span3" name="price" >
+                <%
+                    LinkedHashMap<String, String> arrayPrice = new LinkedHashMap<String, String>();
+                    String[] prices = {"5","15","30","50","100"};
+                    arrayPrice.put("0", "Chọn giá tiền");
+                    for (int i = 0; i < prices.length; i++){
+                        arrayPrice.put(prices[i], "Mệnh giá "+prices[i]+".000 đ");
+//                        System.out.println("GIA TRI "+i+" Là :"+prices[i]);
+                    }
+                    System.out.println("prices arr Lenght : "+ prices.length);
+//                        arrayResultCode.forEach((k,v) -> System.out.println("key: "+k+" =>  value:"+v));
+
+                    Iterator it2 = arrayPrice.entrySet().iterator();
+                    String selectedPrice = "";
+                    while (it2.hasNext()) {
+                        Map.Entry pair = (Map.Entry) it2.next();
+//                            System.out.println(pair.getKey() + " = " + pair.getValue());
+                        selectedPrice = "";
+                        if (pair.getKey().equals(price)) {
+                            selectedPrice = "selected";
+                        }
+                        out.println("<option value='" + pair.getKey() + "' " + selectedPrice + ">" + pair.getValue() + "</option>");
+                        it2.remove(); // avoids a ConcurrentModificationException
+                    }
+                %>
+            </select>
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <label class="control-label">Mã CP:</label>
+        <div class="controls">
+            <input type="text" name="cpCode"  value="<%= cpCode%>" class="span3" placeholder="Nhập mã CP" />
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Tên CP:</label>
+        <div class="controls">
+            <input type="text" name="cpName"  value="<%= cpName%>" class="span3" placeholder="Nhập tên CP" />
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Game CP:</label>
+        <div class="controls">
+            <input type="text" name="cpGame"  value="<%= cpGame%>" class="span3" placeholder="Nhập game CP" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Số điện thoại:</label>
+        <div class="controls">
+            <input type="text" name="msisdn"  value="<%= msisdn%>" class="span3" placeholder="Nhập game Số điện thoại" />
+        </div>
+    </div>
+
+
+    <div class="control-group">
+        <label class="control-label">Từ ngày:</label>
+        <div class="controls">
+            <div  data-date="12-02-2012" class="input-append date datepicker">
+                <input type="text" name="formDate" value="<%= formDate%>"  data-date-format="dd" class="span11" >
+                <span class="add-on"><i class="icon-th"></i></span> </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Đến ngày:</label>
+        <div class="controls">
+            <div  data-date="12-02-2012" class="input-append date datepicker">
+                <input type="text" name="toDate" value="<%= toDate%>"  data-date-format="yyyy-mm-dd" class="span11" >
+                <span class="add-on"><i class="icon-th"></i></span> </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Giới hạn</label>
+        <div class="controls">
+            <select class="span3" name="numberLimit">
+                <%
+                    for (int i = 0; i <= 1000; i += 10) {
+                        String selectedLimit = "";
+                        if (i > 0) {
+                            if (i == limit) {
+                                selectedLimit = "selected";
+                            }
+
+                %>  
+                <option value="<%= i%>" <%= selectedLimit%>><%= i%> bản ghi</option>
+                <%
+                        }
+                    }
+                %>
+            </select>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" name="searchResponseAirTime" class="btn btn-success">Thống kê / Tìm kiếm</button>
+    </div>
+</form>

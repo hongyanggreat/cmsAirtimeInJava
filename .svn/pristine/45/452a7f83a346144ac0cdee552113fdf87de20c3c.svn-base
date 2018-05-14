@@ -1,0 +1,45 @@
+<%-- 
+    Document   : table
+    Created on : Sep 18, 2017, 12:39:25 AM
+    Author     : Admin
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<table class="table table-bordered data-table">
+    <thead>
+        <tr>
+            <th>Stt</th>
+            <th>ID</th>
+            <th>Thời gian</th>
+            <th>Kết quả</th>
+            <th>Miêu tả</th>
+            <th>CP code</th>
+            <th>Tài khoản game</th>
+            <th>Xem chi tiết</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%
+            int i = 0;
+            for (Request9505 dt : dts) {
+                i++;
+                int idService = dt.getID();
+                String desciption = dt.getDESCRIPTION();
+        %>
+        <tr class="gradeX">
+            <td style="width:30px;text-align:center"><%= i%></td>
+            <td style="width:30px;text-align:center"><%= dt.getID()%></td>
+            <td><%= dt.getREQUEST_TIME()%></td>
+            <td><%= dt.getRESULT_CODE()%></td>
+            <td style="text-align: left;max-width:300px;">
+                <div style="overflow:hidden;max-height: 20px;" title="<%= desciption%>"><%= desciption%></div>
+            </td>
+            <td><%= dt.getCP_CODE()%></td>
+            <td><%= dt.getACCOUNT()%></td>
+            <td>
+                <a href="view.jsp?id=<%= idService%>"> <%= Helper.getImageIcon("view-details", baseUrl)%> Xem chi tiết </a>
+            </td>
+        </tr>
+        <% }%>
+    </tbody>
+</table>

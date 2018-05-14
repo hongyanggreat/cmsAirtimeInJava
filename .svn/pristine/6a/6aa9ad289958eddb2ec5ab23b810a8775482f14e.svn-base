@@ -1,0 +1,297 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.htc.airtime.dao;
+
+import com.htc.airtime.components.MyDate;
+import com.htc.airtime.components.Tool;
+import com.htc.airtime.connect.DBPool;
+import com.htc.airtime.model.Request9505;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import org.apache.log4j.Logger;
+
+/**
+ *
+ * @author Admin
+ */
+public class Request9505DAO {
+
+    static final Logger logger = Logger.getLogger(AccountDAO.class);
+
+    public ArrayList<Request9505> getList() throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ArrayList list = null;
+
+        try {
+            conn = DBPool.getConnection();
+            String sql = "SELECT * FROM tbl_9505_request";
+            pstm = conn.prepareCall(sql);
+            rs = pstm.executeQuery();
+            list = new ArrayList();
+            while (rs.next()) {
+                Request9505 dt = new Request9505();
+
+                dt.setID(rs.getInt("ID"));
+                dt.setPHONE(rs.getString("PHONE"));
+                dt.setCP_CODE(rs.getString("CP_CODE"));
+                dt.setACCOUNT(rs.getString("ACCOUNT"));
+                dt.setTOTAL_AMOUNT(rs.getInt("TOTAL_AMOUNT"));
+                dt.setREQUEST_TIME(rs.getTimestamp("REQUEST_TIME"));
+                dt.setRESULT_CODE(rs.getString("RESULT_CODE"));
+                dt.setDESCRIPTION(rs.getString("DESCRIPTION"));
+
+                list.add(dt);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Co loi");
+            System.out.println("ex" + ex);
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+        return list;
+    }
+
+    public ArrayList<Request9505> getList(int limit) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ArrayList list = null;
+
+        try {
+            conn = DBPool.getConnection();
+            String sql = "SELECT * FROM tbl_9505_request LIMIT " + limit;
+            pstm = conn.prepareCall(sql);
+            rs = pstm.executeQuery();
+            list = new ArrayList();
+            while (rs.next()) {
+                Request9505 dt = new Request9505();
+
+                dt.setID(rs.getInt("ID"));
+                dt.setPHONE(rs.getString("PHONE"));
+                dt.setCP_CODE(rs.getString("CP_CODE"));
+                dt.setACCOUNT(rs.getString("ACCOUNT"));
+                dt.setTOTAL_AMOUNT(rs.getInt("TOTAL_AMOUNT"));
+                dt.setREQUEST_TIME(rs.getTimestamp("REQUEST_TIME"));
+                dt.setRESULT_CODE(rs.getString("RESULT_CODE"));
+                dt.setDESCRIPTION(rs.getString("DESCRIPTION"));
+
+                list.add(dt);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Co loi");
+            System.out.println("ex" + ex);
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+        return list;
+    }
+
+    public ArrayList<Request9505> getList(int limit, int offset) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ArrayList list = null;
+
+        try {
+
+            conn = DBPool.getConnection();
+            String sql = "SELECT * FROM tbl_9505_request ";
+            sql += " LIMIT " + limit + " OFFSET " + offset;
+            pstm = conn.prepareCall(sql);
+            rs = pstm.executeQuery();
+            list = new ArrayList();
+            while (rs.next()) {
+                Request9505 dt = new Request9505();
+
+                dt.setID(rs.getInt("ID"));
+                dt.setPHONE(rs.getString("PHONE"));
+                dt.setCP_CODE(rs.getString("CP_CODE"));
+                dt.setACCOUNT(rs.getString("ACCOUNT"));
+                dt.setTOTAL_AMOUNT(rs.getInt("TOTAL_AMOUNT"));
+                dt.setREQUEST_TIME(rs.getTimestamp("REQUEST_TIME"));
+                dt.setRESULT_CODE(rs.getString("RESULT_CODE"));
+                dt.setDESCRIPTION(rs.getString("DESCRIPTION"));
+
+                list.add(dt);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Co loi");
+            System.out.println("ex" + ex);
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+        return list;
+    }
+
+    public ArrayList<Request9505> getListSearch(String resultCode, String cpCode, String formDate, String toDate, int limit, int offset) throws SQLException {
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ArrayList list = null;
+
+        try {
+            String sql = "SELECT * FROM tbl_9505_request";
+            sql += " WHERE 1=1";
+
+            if (!cpCode.equals("")) {
+                sql += " AND CP_CODE = \"" + cpCode + "\"";;
+            }
+            if (!resultCode.equals("all")) {
+                if (resultCode.equals("00")) {
+                    sql += " AND RESULT_CODE = \"" + resultCode + "\"";
+                } else {
+                    sql += " AND RESULT_CODE != \"00\"";
+                }
+            }
+            if (!formDate.equals("")) {
+                sql += " AND REQUEST_TIME >= \"" + MyDate.convertDate(formDate, "yyyy-MM-dd") + " 00:00:00\"";
+            }
+            if (!toDate.equals("")) {
+                sql += " AND REQUEST_TIME <= \"" + MyDate.convertDate(toDate, "yyyy-MM-dd") + " 23:59:59\"";
+            }
+
+            sql += " LIMIT " + limit + " OFFSET " + offset;
+            conn = DBPool.getConnection();
+
+            pstm = conn.prepareCall(sql);
+            rs = pstm.executeQuery();
+            list = new ArrayList();
+            while (rs.next()) {
+                Request9505 dt = new Request9505();
+
+                dt.setID(rs.getInt("ID"));
+                dt.setPHONE(rs.getString("PHONE"));
+                dt.setCP_CODE(rs.getString("CP_CODE"));
+                dt.setACCOUNT(rs.getString("ACCOUNT"));
+                dt.setTOTAL_AMOUNT(rs.getInt("TOTAL_AMOUNT"));
+                dt.setREQUEST_TIME(rs.getTimestamp("REQUEST_TIME"));
+                dt.setRESULT_CODE(rs.getString("RESULT_CODE"));
+                dt.setDESCRIPTION(rs.getString("DESCRIPTION"));
+
+                list.add(dt);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public int countAllSearch(String resultCode, String cpCode, String formDate, String toDate) {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        String sql = "SELECT COUNT(*) AS total FROM tbl_9505_request";
+        sql += " WHERE 1=1";
+
+        if (!cpCode.equals("")) {
+            sql += " AND CP_CODE = \"" + cpCode + "\"";;
+        }
+        if (!resultCode.equals("all")) {
+            if (resultCode.equals("00")) {
+                sql += " AND RESULT_CODE = \"" + resultCode + "\"";
+            } else {
+                sql += " AND RESULT_CODE != \"00\"";
+            }
+        }
+        if (!formDate.equals("")) {
+            sql += " AND REQUEST_TIME >= \"" + MyDate.convertDate(formDate, "yyyy-MM-dd") + " 00:00:00\"";
+        }
+        if (!toDate.equals("")) {
+            sql += " AND REQUEST_TIME <= \"" + MyDate.convertDate(toDate, "yyyy-MM-dd") + " 23:59:59\"";
+        }
+        int totalCount = 0;
+        try {
+            conn = DBPool.getConnection();
+            pstm = conn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.first()) {
+                totalCount = rs.getInt("total");
+            }
+        } catch (Exception ex) {
+            System.out.println("Co loi");
+            System.out.println("ex" + ex);
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+
+        return totalCount;
+    }
+
+    public int countAll() {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        String sql = "SELECT COUNT(*) AS total FROM tbl_9505_request";
+        int totalCount = 0;
+        try {
+            conn = DBPool.getConnection();
+            pstm = conn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.first()) {
+                totalCount = rs.getInt("total");
+            }
+        } catch (Exception ex) {
+            System.out.println("Co loi");
+            System.out.println("ex" + ex);
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+
+        return totalCount;
+    }
+
+    public Request9505 view(int id) {
+        Connection conn = null;
+        Request9505 dt = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        Connection connection = null;
+        try {
+            conn = DBPool.getConnection();
+            String sql = "SELECT *"
+                    + " FROM tbl_9505_request"
+                    + " WHERE ID = ?";
+            pstm.setInt(1, id);
+            rs = pstm.executeQuery();
+            dt = new Request9505();
+            if (rs.next()) {
+                dt.setID(rs.getInt("ID"));
+                dt.setPHONE(rs.getString("PHONE"));
+                dt.setCP_CODE(rs.getString("CP_CODE"));
+                dt.setACCOUNT(rs.getString("ACCOUNT"));
+                dt.setTOTAL_AMOUNT(rs.getInt("TOTAL_AMOUNT"));
+                dt.setREQUEST_TIME(rs.getTimestamp("REQUEST_TIME"));
+                dt.setRESULT_CODE(rs.getString("RESULT_CODE"));
+                dt.setDESCRIPTION(rs.getString("DESCRIPTION"));
+                dt.setOTHER_INFO(rs.getString("OTHER_INFO"));
+            }
+        } catch (Exception ex) {
+            System.out.println("Co loi");
+            System.out.println("ex" + ex);
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+        return dt;
+
+    }
+
+}

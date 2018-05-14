@@ -1,0 +1,102 @@
+<%@page import="com.htc.airtime.dao.AccountDAO"%>
+<%@page import="com.htc.airtime.components.MyDate"%>
+<%@page import="java.sql.Timestamp"%>
+<%@page import="com.htc.airtime.model.Request9505"%>
+<%@page import="com.htc.airtime.dao.Request9505DAO"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="../includes/head.jsp" %>
+<%@include file="common.jsp" %>
+<%    //
+    Helper.cLogin(response, session);
+    AccountDAO account = new AccountDAO();
+    boolean checkPermission = account.checkList(request, session);
+    Helper.cPermission(response, checkPermission);
+    String actionName = "Chi tiết";
+
+    int id = 0;
+    id = Integer.parseInt(request.getParameter("id"));
+    Request9505DAO request9505 = new Request9505DAO();
+    Request9505 dt = new Request9505();
+    dt = request9505.view(id);
+    Timestamp requestTime = dt.getREQUEST_TIME();
+    String resultCode = dt.getRESULT_CODE();
+    String phone = dt.getPHONE();
+    String cpCode = dt.getCP_CODE();
+    String acc = dt.getACCOUNT();
+    int totalAmount = dt.getTOTAL_AMOUNT();
+    String otherInfo = dt.getOTHER_INFO();
+%>
+
+<!--close-Header-part--> 
+
+<!--top-Header-menu-->
+<%@include file="../includes/topMenu.jsp" %>
+<!--close-top-Header-menu--> 
+<!--left-menu-stats-sidebar-->
+<%@include file="../includes/mainMenu.jsp" %>
+<!--close-left-menu-stats-sidebar-->
+
+<div id="content">
+    <div id="content-header">
+        <%@include file="../includes/breadcrumb.jsp" %>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span7 offset2">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-ok-sign"></i> </span>
+                        <h5><%= actionName + "Request tại thời điểm :" + requestTime%></h5>
+                        <span class="icon"><a class="" href="<%= baseUrl%>/<%= moduleSourse%>" title="Danh sách" style="padding:0 2px;">
+                                <%= Helper.getImageIcon("home", baseUrl)%> Danh sách</a>
+                        </span>
+                    </div>
+                    <div class="widget-content">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px"></th>
+                                    <th>Chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td style="width: 100px"><span class="">Kết quả</span></td>
+                                    <td><%= resultCode%></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px"><span class="">Phone</span></td>
+                                    <td><%= phone%></td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width: 100px"><span class="">Cp Code</span></td>
+                                    <td><%= cpCode%></td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width: 100px"><span class="">Tài khoản</span></td>
+                                    <td><%= acc%></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px"><span class="">Số tiền</span></td>
+                                    <td><%= totalAmount%></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px"><span class="">Thông tin khác</span></td>
+                                    <td style="text-align: left;max-width:130px;">
+                                        <div style="overflow:hidden;max-height: 20px;" title='<%= otherInfo%>'><%= otherInfo%></div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<%@include file="../includes/topFooter.jsp" %>
+<%@include file="../includes/footerJs.jsp" %>

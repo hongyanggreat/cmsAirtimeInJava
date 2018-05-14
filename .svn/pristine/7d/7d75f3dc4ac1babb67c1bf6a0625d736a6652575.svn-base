@@ -1,0 +1,171 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.htc.airtime.servlet.demoAirTime;
+
+import com.htc.airtime.components.Tool;
+import com.htc.airtime.httpRequest.AirTimeHttpReq;
+import com.htc.airtime.model.AirTimeRequest;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URLEncoder;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import net.sf.json.JSONObject;
+
+/**
+ *
+ * @author Admin
+ */
+@WebServlet(name = "processChargeAirTime", urlPatterns = {"/processChargeAirTime"})
+public class charge extends HttpServlet {
+
+    public final static String URL = "http://airtime.kenhthe.vn:9989/service/Charge";
+//    public final static String URL = "http://127.0.0.1:8686/service/Charge";
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            HttpSession session = request.getSession();
+            //KIEM TRA DA DANG NHAP CHUA 
+            if (Tool.checkNull(session.getAttribute("acc"))) {
+                response.sendRedirect(request.getContextPath() + "/");
+                return;
+            }
+            String cpCode = "";
+            String user = "";
+            String accesskey = "";
+            String cpGame = "";
+            String msisdn = "";
+            String price = "";
+            String cpRequestId = "";
+            String otp = "";
+
+            if (!Tool.checkNull(request.getParameter("cpCode"))) {
+                cpCode = request.getParameter("cpCode").trim();
+            }
+            if (!Tool.checkNull(request.getParameter("user"))) {
+                user = request.getParameter("user").trim();
+            }
+            if (!Tool.checkNull(request.getParameter("accesskey"))) {
+                accesskey = request.getParameter("accesskey").trim();
+            }
+            if (!Tool.checkNull(request.getParameter("cpGame"))) {
+                cpGame = request.getParameter("cpGame").trim();
+            }
+            if (!Tool.checkNull(request.getParameter("msisdn"))) {
+                msisdn = request.getParameter("msisdn").trim();
+            }
+            if (!Tool.checkNull(request.getParameter("price"))) {
+                price = request.getParameter("price").trim();
+            }
+            if (!Tool.checkNull(request.getParameter("otp"))) {
+                otp = request.getParameter("otp").trim();
+            }
+            AirTimeRequest dataGet = new AirTimeRequest();
+
+            if (!Tool.checkNull(request.getParameter("cpRequestId"))) {
+                cpRequestId = request.getParameter("cpRequestId").trim();
+            }
+            String signature = "";
+            String otherInfo = "";
+
+            dataGet.setCpCode(cpCode);
+            dataGet.setCpGame(cpGame);
+            dataGet.setUser(user);
+            dataGet.setCpRequestId(cpRequestId);
+            dataGet.setMsisdn(msisdn);
+            dataGet.setPrice(price);
+            dataGet.setOtp(otp);
+            dataGet.setAccesskey(accesskey);
+            dataGet.setSignature("signature");
+            dataGet.setOtherInfo("otherInfo");
+            String dataSend = dataGet.toJson();
+            dataSend = URLEncoder.encode(dataSend);
+            String url = URL + "?data=" + dataSend;
+            System.out.println("----------URL:"+url);
+            String result = AirTimeHttpReq.sendGET(url);
+
+            String code = "";
+            String message = "";
+            try {
+                JSONObject rsJson = JSONObject.fromObject(result);
+                code = rsJson.getString("code");
+                message = rsJson.getString("message");
+                dataGet.setResult(result);
+
+            } catch (Exception e) {
+                System.out.println("KHONG PHAI CHUOI JSON");
+            }
+            session.setAttribute("dataGet", dataGet);
+            if (code.equals("00")) {
+                // chuyen sang trang nhap ma OTP
+                session.setAttribute("mess", "Charge thành công!");
+                response.sendRedirect(request.getContextPath() + "/demoAirtime/success.jsp");
+                return;
+            } else {
+                session.setAttribute("mess", "Charge thất bại!");
+                request.getRequestDispatcher("/demoAirtime/charge.jsp").include(request, response);
+                return;
+
+            }
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}

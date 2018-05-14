@@ -1,0 +1,71 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.htc.airtime.dao.Response9505DAO"%>
+<%@page import="com.htc.airtime.model.Response9505"%>
+<%@page import="com.htc.airtime.dao.Request9505DAO"%>
+<%@page import="com.htc.airtime.model.Services"%>
+<%@page import="com.htc.airtime.dao.ServicesDAO"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="../includes/head.jsp" %>
+<%@include file="common.jsp" %>
+
+<%    
+    String actionName = "Danh sách";
+    int pages = 1;
+    int limit = 6;
+    if (request.getParameter("page") != null) {
+        pages = Integer.parseInt(request.getParameter("page"));
+    }
+    int offset = 0;
+    offset = (pages - 1) * limit;
+    Response9505DAO response9505 = new Response9505DAO();
+    int totalItem = response9505.countAll();
+    int totalPage =  (int)Math.ceil((double)totalItem / limit);
+    String actionPage = baseUrl+"/response9505/index.jsp?page=";
+    String paramPage = "";
+    ArrayList<Response9505> dts = response9505.getList(limit, offset);
+%>
+
+<!--close-Header-part--> 
+
+<!--top-Header-menu-->
+<%@include file="../includes/topMenu.jsp" %>
+<!--close-top-Header-menu--> 
+<!--left-menu-stats-sidebar-->
+<%@include file="../includes/mainMenu.jsp" %>
+<!--close-left-menu-stats-sidebar-->
+
+<div id="content">
+    <div id="content-header">
+        <%@include file="../includes/breadcrumb.jsp" %>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-title">
+                        <span class="icon"><i class="icon-th"></i></span> 
+                        <h5><%= actionName %></h5>
+                        <span class="icon"><a class="" href="<%= baseUrl%>/<%= moduleSourse %>/search.jsp" title="Tìm kiếm" style="padding:0 2px;">
+                                <img  width="20" src="<%= baseUrl%>/resource/images/icon/search.png" alt=""> Tìm kiếm</a>
+                        </span>
+                        <span class="icon"><a class="" href="<%= baseUrl%>/<%= moduleSourse %>/statistic.jsp" title="Thống kê" style="padding:0 2px;">
+                                <img  width="20" src="<%= baseUrl%>/resource/images/icon/statistic.png" alt=""> Thống kê</a>
+                        </span>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <%@include file="table.jsp" %>
+                    </div>
+                </div>
+                <div class="pagination alternate" style="text-align: center">
+                    <ul>
+                        <%@include file="../includes/paginator.jsp" %>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<%@include file="../includes/topFooter.jsp" %>
+<%@include file="../includes/footerJs.jsp" %>

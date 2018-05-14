@@ -1,0 +1,92 @@
+<%-- 
+    Document   : formSearch
+    Created on : Sep 15, 2017, 11:56:57 AM
+    Author     : Admin
+--%>
+
+<%@page import="java.util.LinkedHashMap"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.Map"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+ 
+<form action="<%= action %>" name="myform" method="get" class="form-horizontal">
+                                
+    <div class="control-group">
+        <label class="control-label">Kết quả</label>
+        <div class="controls">
+            <select class="span3" name="resultCode" >
+                <%
+                    LinkedHashMap<String,String> arrayResultCode = new LinkedHashMap<String, String>();
+                        arrayResultCode.put("00", "Thành công");
+                        arrayResultCode.put("01", "Thất bại");
+                        arrayResultCode.put("all", "Tất cả");
+//                        arrayResultCode.forEach((k,v) -> System.out.println("key: "+k+" =>  value:"+v));
+                        
+                    Iterator it = arrayResultCode.entrySet().iterator();
+                        String selectedResultCode = "";
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it.next();
+//                            System.out.println(pair.getKey() + " = " + pair.getValue());
+                            selectedResultCode = "";
+                            if(pair.getKey().equals(resultCode)){
+                                selectedResultCode = "selected";
+                            }
+                            out.println("<option value='"+pair.getKey()+"' "+selectedResultCode+">"+pair.getValue()+"</option>");
+                            it.remove(); // avoids a ConcurrentModificationException
+                        }
+                %>
+<!--                <option value="00" selected="selected">Thành công</option>
+                <option value="01">Thất bại</option>
+                <option value="">Tất cả</option>-->
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Mã CP:</label>
+        <div class="controls">
+            <input type="text" name="cpCode"  value="<%= cpCode %>" class="span2" placeholder="Nhập mã CP" />
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Từ ngày:</label>
+        <div class="controls">
+            <div  data-date="12-02-2012" class="input-append date datepicker">
+                <input type="text" name="formDate" value="<%= formDate %>"  data-date-format="dd" class="span11" >
+            <span class="add-on"><i class="icon-th"></i></span> </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Đến ngày:</label>
+        <div class="controls">
+          <div  data-date="12-02-2012" class="input-append date datepicker">
+            <input type="text" name="toDate" value="<%= toDate %>"  data-date-format="yyyy-mm-dd" class="span11" >
+            <span class="add-on"><i class="icon-th"></i></span> </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Giới hạn</label>
+        <div class="controls">
+            <select class="span3" name="numberLimit">
+            <%
+                for (int i = 0; i <= 1000; i += 10) {
+                    String selectedLimit = "";
+                    if(i>0){
+                        if(i == limit){
+                            selectedLimit = "selected";
+                        }
+                        
+            %>  
+                <option value="<%= i %>" <%= selectedLimit %>><%= i %> bản ghi</option>
+            <%
+                    }
+                }
+            %>
+          </select>
+        </div>
+      </div>
+    <div class="form-actions">
+        <button type="submit" name="searchRequest9505" class="btn btn-success">Tìm kiếm</button>
+    </div>
+    </form>

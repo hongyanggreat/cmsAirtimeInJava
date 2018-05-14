@@ -1,0 +1,104 @@
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import static org.apache.commons.lang.StringUtils.isNumeric;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/**
+ *
+ * @author Company
+ */
+public class StringDemo {
+
+    public static void main(String[] args) {
+//        getCharater();
+        String phone = "";
+        phone = "8X4964933669";
+        phone = "0964933669";
+        phone = "01649336768";
+        boolean isPhone = validPhoneViettel84(phone);
+        if (isPhone) {
+            builPhone84(phone);
+            System.out.println("ok dung roi");
+        } else {
+            System.out.println("SAI");
+        }
+    }
+
+    public static String builPhone84(String phone) {
+        String firstLetter = "";
+        String strPhone = "";
+        firstLetter = phone.substring(0, 1);
+        firstLetter = phone.substring(0, 1);
+        if ("0".equals(firstLetter)) {
+            strPhone = "84";
+            strPhone += phone.substring(1);
+        } else {
+            strPhone = phone;
+        }
+        return strPhone;
+    }
+
+    public static boolean validPhoneViettel84(String phone) {
+//        String regex = "^(\\+849\\d{8})|(849\\d{8})|(09\\d{8})|(\\+841\\d{9})|(841\\d{9})|(01\\d{9})|(\\+848\\d{8})|(848\\d{8})|(08\\d{8})$";
+        String regex = "^(\\"
+                + "(8486\\d{7})|"
+                + "(8496\\d{7})|"
+                + "(8497\\d{7})|"
+                + "(8498\\d{7})|"
+                + "(84161\\d{7})|"
+                + "(84162\\d{7})|"
+                + "(84163\\d{7})|"
+                + "(84164\\d{7})|"
+                + "(84165\\d{7})|"
+                + "(84166\\d{7})|"
+                + "(84167\\d{7})|"
+                + "(84168\\d{7})|"
+                + "(84169\\d{7})"
+                //===========
+                + "(086\\d{7})|"
+                + "(096\\d{7})|"
+                + "(097\\d{7})|"
+                + "(098\\d{7})|"
+                + "(0161\\d{7})|"
+                + "(0162\\d{7})|"
+                + "(0163\\d{7})|"
+                + "(0164\\d{7})|"
+                + "(0165\\d{7})|"
+                + "(0166\\d{7})|"
+                + "(0167\\d{7})|"
+                + "(0168\\d{7})|"
+                + "(0169\\d{7})"
+                + "$";
+        // Create a Pattern object
+        Pattern pattern = Pattern.compile(regex);
+        // Now create matcher object.
+        Matcher matcher = pattern.matcher(phone);
+        return matcher.matches();
+    }
+
+    public static void getCharater() {
+        String example = "84964933669";
+        String firstLetter = "";
+        if (!isNumeric(example)) {
+            return;
+        }
+        long l = System.nanoTime();
+        firstLetter = String.valueOf(example.charAt(0));
+        System.out.println("String.valueOf: " + (System.nanoTime() - l));
+        System.out.println("firstLetter:" + firstLetter);
+        l = System.nanoTime();
+        firstLetter = Character.toString(example.charAt(0));
+        System.out.println("Character.toString: " + (System.nanoTime() - l));
+        System.out.println("firstLetter:" + firstLetter);
+
+        l = System.nanoTime();
+        firstLetter = example.substring(0, 1);
+        System.out.println("substring: " + (System.nanoTime() - l));
+        System.out.println("firstLetter:" + firstLetter);
+    }
+}

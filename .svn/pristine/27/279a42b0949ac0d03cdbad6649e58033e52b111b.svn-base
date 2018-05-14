@@ -1,0 +1,57 @@
+<%-- 
+    Document   : chargeMulPhone
+    Created on : Nov 27, 2017, 11:20:04 AM
+    Author     : Company
+--%>
+<%@page import="java.io.FileReader"%>
+<%@page import="java.io.BufferedReader"%>
+<%@page import="java.io.IOException"%>
+<%@page import="com.htc.airtime.components.Tool"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String fileName = "";
+    if (!Tool.checkNull(request.getParameter("fileName"))) {
+        fileName = request.getParameter("fileName");
+    }
+    BufferedReader br = null;
+    FileReader fr = null;
+    try {
+        //br = new BufferedReader(new FileReader(FILENAME));
+        fr = new FileReader(fileName);
+        br = new BufferedReader(fr);
+
+        String sCurrentLine;
+
+        while ((sCurrentLine = br.readLine()) != null) {
+            sCurrentLine = sCurrentLine.trim();
+            System.out.println(sCurrentLine);
+//            out.println("<tr>"
+//                    + "<td style='text-align: center;'>"
+//                    + "Số điện thoại :<input type='text' name='msisdn' value='"+sCurrentLine+"' placeholder='Số điện thoại' readonly > "
+//                    + "Nhập mã OTP :"
+//                    + "<input type='text' name='otpCode' value='' placeholder='Nhập mã OTP'>"
+//                    + "<button type='submit' name='getOtp' class='btn btn-small btn-success'>Charge</button>"
+//                    + "</td>"
+//                    + "</tr>");
+        }
+    } catch (IOException e) {
+
+        e.printStackTrace();
+
+    } finally {
+        try {
+            if (br != null) {
+                br.close();
+            }
+
+            if (fr != null) {
+                fr.close();
+            }
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+
+        }
+
+    }
+%>

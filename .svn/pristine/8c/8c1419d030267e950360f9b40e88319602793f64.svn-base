@@ -1,0 +1,113 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.htc.airtime.model;
+
+import java.sql.Timestamp;
+
+/**
+ *
+ * @author Admin
+ */
+public class Request9505 {
+
+    private int ID;
+    private String PHONE;
+    private String CP_CODE;
+    private String ACCOUNT;
+    private int TOTAL_AMOUNT;
+    private String OTHER_INFO;
+    private Timestamp REQUEST_TIME;
+    private String RESULT_CODE;
+    private String DESCRIPTION;
+
+    public Request9505() {
+    }
+
+    public Request9505(int ID, String PHONE, String CP_CODE, String ACCOUNT, int TOTAL_AMOUNT, String OTHER_INFO, Timestamp REQUEST_TIME, String RESULT_CODE, String DESCRIPTION) {
+        this.ID = ID;
+        this.PHONE = PHONE;
+        this.CP_CODE = CP_CODE;
+        this.ACCOUNT = ACCOUNT;
+        this.TOTAL_AMOUNT = TOTAL_AMOUNT;
+        this.OTHER_INFO = OTHER_INFO;
+        this.REQUEST_TIME = REQUEST_TIME;
+        this.RESULT_CODE = RESULT_CODE;
+        this.DESCRIPTION = DESCRIPTION;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public String getPHONE() {
+        return PHONE;
+    }
+
+    public void setPHONE(String PHONE) {
+        this.PHONE = PHONE;
+    }
+
+    public String getCP_CODE() {
+        return CP_CODE;
+    }
+
+    public void setCP_CODE(String CP_CODE) {
+        this.CP_CODE = CP_CODE;
+    }
+
+    public String getACCOUNT() {
+        return ACCOUNT;
+    }
+
+    public void setACCOUNT(String ACCOUNT) {
+        this.ACCOUNT = ACCOUNT;
+    }
+
+    public int getTOTAL_AMOUNT() {
+        return TOTAL_AMOUNT;
+    }
+
+    public void setTOTAL_AMOUNT(int TOTAL_AMOUNT) {
+        this.TOTAL_AMOUNT = TOTAL_AMOUNT;
+    }
+
+    public String getOTHER_INFO() {
+        return OTHER_INFO;
+    }
+
+    public void setOTHER_INFO(String OTHER_INFO) {
+        this.OTHER_INFO = OTHER_INFO;
+    }
+
+    public Timestamp getREQUEST_TIME() {
+        return REQUEST_TIME;
+    }
+
+    public void setREQUEST_TIME(Timestamp REQUEST_TIME) {
+        this.REQUEST_TIME = REQUEST_TIME;
+    }
+
+    public String getRESULT_CODE() {
+        return RESULT_CODE;
+    }
+
+    public void setRESULT_CODE(String RESULT_CODE) {
+        this.RESULT_CODE = RESULT_CODE;
+    }
+
+    public String getDESCRIPTION() {
+        return DESCRIPTION;
+    }
+
+    public void setDESCRIPTION(String DESCRIPTION) {
+        this.DESCRIPTION = DESCRIPTION;
+    }
+    
+}

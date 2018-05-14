@@ -1,0 +1,61 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.htc.airtime.model;
+import com.htc.airtime.model.Category;
+
+/**
+ *
+ * @author Admin
+ */
+public class CategoryService extends Category{
+    private String nameService;
+
+    public CategoryService() {
+    }
+
+    public CategoryService(String nameService) {
+        this.nameService = nameService;
+    }
+
+    public CategoryService(String nameService, int category_id, String category_name) {
+        super(category_id, category_name);
+        this.nameService = nameService;
+    }
+
+    public String getNameService() {
+        return nameService;
+    }
+
+    public void setNameService(String nameService) {
+        this.nameService = nameService;
+    }
+
+    @Override
+    public void setCategory_name(String category_name) {
+        super.setCategory_name(category_name); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getCategory_name() {
+        return super.getCategory_name(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setCategory_id(int category_id) {
+        super.setCategory_id(category_id); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getCategory_id() {
+        return super.getCategory_id(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+//    public static void main(String[] args) {
+//        System.out.println("x");
+//    }
+    
+    
+}

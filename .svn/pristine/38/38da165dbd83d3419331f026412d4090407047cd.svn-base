@@ -1,0 +1,245 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.htc.airtime.dao;
+//
+//import com.htc.airtime.components.MyDate;
+//import com.htc.airtime.connect.DBConnect;
+//import java.sql.Connection;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import java.util.ArrayList;
+//import com.htc.airtime.model.Response9505;
+
+/**
+ *
+ * @author Admin
+ */
+public class Response9505DAO {
+//    public int countAll() {
+//        Connection conn = null;
+//        PreparedStatement pstmt = null;
+//        ResultSet rs = null;
+//        String sql = "SELECT COUNT(*) AS total FROM tbl_9505_response";
+//        int totalCount = 0;
+//        try {
+//            conn = DBConnect.getConnection();
+//            pstmt = conn.prepareStatement(sql);
+//            rs = pstmt.executeQuery();
+//            if (rs.first()) {
+//                totalCount = rs.getInt("total");
+//            }
+//        } catch (Exception e) {
+////            e.printStackTrace();
+//        } finally {
+//            DBConnect.freeConn(conn);
+//        }
+//        
+//        return totalCount;
+//    }
+//    public int countAllSearch(String resultCode,String cpCode,String formDate,String toDate) {
+//        Connection conn = null;
+//        PreparedStatement pstmt = null;
+//        ResultSet rs = null;
+//        String sql = "SELECT COUNT(*) AS total FROM tbl_9505_response";
+//                sql += " WHERE 1=1";
+//                
+//                if(!cpCode.equals("")){
+//                     sql += " AND CP_CODE = \"" + cpCode +"\"";;
+//                }
+//                if(!resultCode.equals("all")){
+//                    if(resultCode.equals("00")){
+//                        sql += " AND RESULT_CODE = \"" + resultCode + "\"";
+//                    }else{
+//                        sql += " AND RESULT_CODE != \"00\"";
+//                    }
+//                }
+//               if(!formDate.equals("")){
+//                   sql += " AND REQUEST_TIME >= \""+MyDate.convertDate(formDate, "yyyy-MM-dd")+" 00:00:00\"";
+//               }
+//               if(!toDate.equals("")){
+//                   sql += " AND REQUEST_TIME <= \""+MyDate.convertDate(toDate, "yyyy-MM-dd")+" 23:59:59\"";
+//               }
+//        int totalCount = 0;
+//        try {
+//            conn = DBConnect.getConnection();
+//            pstmt = conn.prepareStatement(sql);
+//            rs = pstmt.executeQuery();
+//            if (rs.first()) {
+//                totalCount = rs.getInt("total");
+//            }
+//        } catch (Exception e) {
+////            e.printStackTrace();
+//        } finally {
+//            DBConnect.freeConn(conn);
+//        }
+//        
+//        return totalCount;
+//    }
+//    public ArrayList<Response9505> getList(int limit,int offset) throws SQLException {
+//
+//        Connection connection = DBConnect.getConnection();
+//        String sql = "SELECT * FROM tbl_9505_response " ;
+//            sql+= " LIMIT "+limit+" OFFSET "+offset;
+//        PreparedStatement ps = connection.prepareCall(sql);
+//        ResultSet rs = ps.executeQuery();
+//        ArrayList list = new ArrayList();
+//        try {
+//            while (rs.next()) {
+//                Response9505 dt = new Response9505();
+//                
+//                dt.setID(rs.getInt("ID"));
+//                dt.setREQUEST_ID(rs.getString("REQUEST_ID"));
+//                dt.setCP_CODE(rs.getString("CP_CODE"));
+//                dt.setGAME_CODE(rs.getString("GAME_CODE"));
+//                dt.setACCOUNT(rs.getString("ACCOUNT"));
+//                dt.setPHONE(rs.getString("PHONE"));
+//                dt.setTOTAL_AMOUNT(rs.getInt("TOTAL_AMOUNT"));
+//                dt.setREQUEST_TIME(rs.getString("REQUEST_TIME"));
+//                dt.setSUMIT_TIME(rs.getTimestamp("SUMIT_TIME"));
+//                dt.setPROVIDER(rs.getString("PROVIDER"));
+//                dt.setCHANNEL(rs.getString("CHANNEL"));
+//                dt.setRESULT_CODE(rs.getString("RESULT_CODE"));
+//                dt.setDESCRIPTION(rs.getString("OTHER_INFO"));
+//                dt.setDESCRIPTION(rs.getString("DESCRIPTION"));
+//                
+//                list.add(dt);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+//    public ArrayList<Response9505> getListSearch(String resultCode,String cpCode,String formDate,String toDate,int limit,int offset) throws SQLException {
+//        Connection connection = DBConnect.getConnection();
+//        String sql = "SELECT * FROM tbl_9505_response" ;
+//                sql += " WHERE 1=1";
+//                
+//                if(!cpCode.equals("")){
+//                     sql += " AND CP_CODE = \"" + cpCode +"\"";;
+//                }
+//                if(!resultCode.equals("all")){
+//                    if(resultCode.equals("00")){
+//                        sql += " AND RESULT_CODE = \"" + resultCode + "\"";
+//                    }else{
+//                        sql += " AND RESULT_CODE != \"00\"";
+//                    }
+//                }
+//               if(!formDate.equals("")){
+//                   sql += " AND REQUEST_TIME >= \""+MyDate.convertDate(formDate, "yyyy-MM-dd")+" 00:00:00\"";
+//               }
+//               if(!toDate.equals("")){
+//                   sql += " AND REQUEST_TIME <= \""+MyDate.convertDate(toDate, "yyyy-MM-dd")+" 23:59:59\"";
+//               }
+//               
+//               sql+= " LIMIT "+ limit +" OFFSET "+offset;
+//        System.out.println(sql);
+//        PreparedStatement ps = connection.prepareCall(sql);
+//        ResultSet rs = ps.executeQuery();
+//        ArrayList list = new ArrayList();
+//        try {
+//            while (rs.next()) {
+//                Response9505 dt = new Response9505();
+//                
+//                dt.setID(rs.getInt("ID"));
+//                dt.setREQUEST_ID(rs.getString("REQUEST_ID"));
+//                dt.setCP_CODE(rs.getString("CP_CODE"));
+//                dt.setGAME_CODE(rs.getString("GAME_CODE"));
+//                dt.setACCOUNT(rs.getString("ACCOUNT"));
+//                dt.setPHONE(rs.getString("PHONE"));
+//                dt.setTOTAL_AMOUNT(rs.getInt("TOTAL_AMOUNT"));
+//                dt.setREQUEST_TIME(rs.getString("REQUEST_TIME"));
+//                dt.setSUMIT_TIME(rs.getTimestamp("SUMIT_TIME"));
+//                dt.setPROVIDER(rs.getString("PROVIDER"));
+//                dt.setCHANNEL(rs.getString("CHANNEL"));
+//                dt.setRESULT_CODE(rs.getString("RESULT_CODE"));
+//                dt.setDESCRIPTION(rs.getString("OTHER_INFO"));
+//                dt.setDESCRIPTION(rs.getString("DESCRIPTION"));
+//                
+//                list.add(dt);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+//    public ArrayList<Response9505> getStatistic(String resultCode,String cpCode,String formDate,String toDate) throws SQLException {
+//        Connection connection = DBConnect.getConnection();
+//        String sql ="SELECT CP_CODE, GAME_CODE, RESULT_CODE,";
+//                sql +=" SUM(TOTAL_AMOUNT) as TOTAL_AMOUNT, COUNT(ID) as TOTAL_REQUEST FROM tbl_9505_response";
+//                sql += " WHERE (`REQUEST_TIME` >= '2017-09-03') AND (REQUEST_TIME <= '2017-09-30')";
+//                sql += " GROUP BY GAME_CODE, GAME_CODE, RESULT_CODE";
+//        System.out.println(sql);
+////        String sql = "SELECT * FROM tbl_9505_response" ;
+////                sql += " WHERE 1=1";
+////                
+////                if(!cpCode.equals("")){
+////                     sql += " AND CP_CODE = \"" + cpCode +"\"";;
+////                }
+////                if(!resultCode.equals("all")){
+////                    if(resultCode.equals("00")){
+////                        sql += " AND RESULT_CODE = \"" + resultCode + "\"";
+////                    }else{
+////                        sql += " AND RESULT_CODE != \"00\"";
+////                    }
+////                }
+////               if(!formDate.equals("")){
+////                   sql += " AND REQUEST_TIME >= \""+MyDate.convertDate(formDate, "yyyy-MM-dd")+" 00:00:00\"";
+////               }
+////               if(!toDate.equals("")){
+////                   sql += " AND REQUEST_TIME <= \""+MyDate.convertDate(toDate, "yyyy-MM-dd")+" 23:59:59\"";
+////               }
+//               
+////        PreparedStatement ps = connection.prepareCall(sql);
+////        ResultSet rs = ps.executeQuery();
+//        ArrayList list = new ArrayList();
+////        try {
+////            while (rs.next()) {
+////                Response9505 dt = new Response9505();
+////               
+////                
+////                list.add(dt);
+////            }
+////
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        }
+//        return list;
+//    }
+//    public Response9505 view(int id) {
+//        Response9505 dt = null;
+//        Connection connection = null;
+//        try {
+//            connection = DBConnect.getConnection();
+//            String sql = "SELECT *"
+//                    +" FROM tbl_9505_response"
+//                    +" WHERE ID = ?";
+//            PreparedStatement ps = connection.prepareCall(sql);
+//            ps.setInt(1, id);
+//            ResultSet rs = ps.executeQuery();
+//            dt = new Response9505();
+//            if (rs.next()) {
+//                dt.setID(rs.getInt("ID"));
+//                dt.setPHONE(rs.getString("PHONE"));
+//                dt.setCP_CODE(rs.getString("CP_CODE"));
+//                dt.setACCOUNT(rs.getString("ACCOUNT"));
+//                dt.setTOTAL_AMOUNT(rs.getInt("TOTAL_AMOUNT"));
+//                dt.setRESULT_CODE(rs.getString("RESULT_CODE"));
+//                dt.setDESCRIPTION(rs.getString("DESCRIPTION"));
+//                dt.setOTHER_INFO(rs.getString("OTHER_INFO"));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            DBConnect.freeConn(connection);
+//        }
+//        return dt;
+//
+//    }
+   
+}

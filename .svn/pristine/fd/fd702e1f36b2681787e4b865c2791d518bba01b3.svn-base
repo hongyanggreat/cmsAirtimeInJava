@@ -1,0 +1,101 @@
+<%@page import="com.htc.airtime.model.Response9505"%>
+<%@page import="com.htc.airtime.dao.Response9505DAO"%>
+<%@page import="com.htc.airtime.components.MyDate"%>
+<%@page import="java.util.ArrayList"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="../includes/head.jsp" %>
+<%@include file="common.jsp" %>
+<!--close-Header-part--> 
+
+<!--top-Header-menu-->
+<%@include file="../includes/topMenu.jsp" %>
+<!--close-top-Header-menu--> 
+<!--left-menu-stats-sidebar-->
+<%@include file="../includes/mainMenu.jsp" %>
+<!--close-left-menu-stats-sidebar-->
+
+<div id="content">
+    <div id="content-header">
+        <%            
+            String actionName = "Thống kê";
+       
+            request.setCharacterEncoding("UTF-8");
+            String resultCode = "00";
+            String cpCode = "";
+            String formDate = MyDate.createDate("MM/dd/yyyy");;
+            String toDate = MyDate.createDate("MM/dd/yyyy");;
+            int limit = 3;
+            int offset = 0;
+            int pages = 1;
+                
+
+            if (request.getParameter("resultCode") != null) {
+                resultCode = request.getParameter("resultCode");
+            }
+            if (request.getParameter("cpCode") != null) {
+                cpCode = request.getParameter("cpCode");
+            }
+            if (request.getParameter("formDate") != null ) {
+                formDate = request.getParameter("formDate");
+            }
+            if (request.getParameter("toDate") != null) {
+                toDate = request.getParameter("toDate");
+            }
+            if (request.getParameter("numberLimit") != null) {
+                limit = Integer.parseInt(request.getParameter("numberLimit"));
+            }
+            if (request.getParameter("pages") != null) {
+                pages = Integer.parseInt(request.getParameter("pages"));
+            }
+            offset = (pages - 1) * limit;
+//                System.out.println(resultCode);
+//                System.out.println(cpCode);
+//                System.out.println(formDate);
+//                System.out.println(toDate);
+//                System.out.println(limit);
+            Response9505DAO response9505 = new Response9505DAO();
+            ArrayList<Response9505> dts = response9505.getStatistic(resultCode, cpCode, formDate, toDate);
+            String action = baseUrl+"/response9505/statistic.jsp";    
+               %> 
+        <%@include file="../includes/breadcrumb.jsp" %>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box collapsible">
+
+                    <div class="widget-title">
+                        <span class="icon"><a class="" href="#collapseOne" data-toggle="collapse" title="Lọc thống kê" style="padding:0 2px;">
+                                <img  width="20" src="<%= baseUrl%>/resource/images/icon/return.png" alt=""> Lọc thống kê</a>
+                        </span>
+                        <!--// Nut chuc nang-->
+                    </div>
+                    <div class="collapse" id="collapseOne">
+                        <!-- //FORM SEARCH -->
+                        <%@include file="formSearch.jsp" %>
+                        <!-- //FORM SEARCH -->
+                    </div>
+                      
+                    <div class="collapse in" id="collapseTwo">
+                        <div class="widget-content" style="padding: 0px" >
+                            <div class="widget-box" style="border:0px;margin:0px">
+                                <div class="widget-title">
+
+                                    <!-- //Hien thi cac nut chuc nang -->
+                                </div>
+                                <div class="widget-content nopadding" style="overflow: scroll;">
+                                    <%--<%@include file="table.jsp" %>--%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<%@include file="../includes/topFooter.jsp" %>
+<%@include file="../includes/footerJs.jsp" %>

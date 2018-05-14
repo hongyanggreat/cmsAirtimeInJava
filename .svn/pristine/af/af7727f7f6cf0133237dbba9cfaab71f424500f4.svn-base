@@ -1,0 +1,163 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.htc.airtime.model;
+
+import java.sql.Timestamp;
+
+/**
+ *
+ * @author Admin
+ */
+public class Response9505 {
+
+    private int ID;
+    private String REQUEST_ID;
+    private String CP_CODE;
+    private String GAME_CODE;
+    private String ACCOUNT;
+    private String PHONE;
+    private int TOTAL_AMOUNT;
+    private String REQUEST_TIME;
+    private Timestamp SUMIT_TIME;
+    private String PROVIDER;
+    private String CHANNEL;
+    private String RESULT_CODE;
+    private String OTHER_INFO;
+    private String DESCRIPTION;
+
+    public Response9505() {
+    }
+
+    public Response9505(int ID, String REQUEST_ID, String CP_CODE, String GAME_CODE, String ACCOUNT, String PHONE, int TOTAL_AMOUNT, String REQUEST_TIME, Timestamp SUMIT_TIME, String PROVIDER, String CHANNEL, String RESULT_CODE, String OTHER_INFO, String DESCRIPTION) {
+        this.ID = ID;
+        this.REQUEST_ID = REQUEST_ID;
+        this.CP_CODE = CP_CODE;
+        this.GAME_CODE = GAME_CODE;
+        this.ACCOUNT = ACCOUNT;
+        this.PHONE = PHONE;
+        this.TOTAL_AMOUNT = TOTAL_AMOUNT;
+        this.REQUEST_TIME = REQUEST_TIME;
+        this.SUMIT_TIME = SUMIT_TIME;
+        this.PROVIDER = PROVIDER;
+        this.CHANNEL = CHANNEL;
+        this.RESULT_CODE = RESULT_CODE;
+        this.OTHER_INFO = OTHER_INFO;
+        this.DESCRIPTION = DESCRIPTION;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public String getREQUEST_ID() {
+        return REQUEST_ID;
+    }
+
+    public void setREQUEST_ID(String REQUEST_ID) {
+        this.REQUEST_ID = REQUEST_ID;
+    }
+
+    public String getCP_CODE() {
+        return CP_CODE;
+    }
+
+    public void setCP_CODE(String CP_CODE) {
+        this.CP_CODE = CP_CODE;
+    }
+
+    public String getGAME_CODE() {
+        return GAME_CODE;
+    }
+
+    public void setGAME_CODE(String GAME_CODE) {
+        this.GAME_CODE = GAME_CODE;
+    }
+
+    public String getACCOUNT() {
+        return ACCOUNT;
+    }
+
+    public void setACCOUNT(String ACCOUNT) {
+        this.ACCOUNT = ACCOUNT;
+    }
+
+    public String getPHONE() {
+        return PHONE;
+    }
+
+    public void setPHONE(String PHONE) {
+        this.PHONE = PHONE;
+    }
+
+    public int getTOTAL_AMOUNT() {
+        return TOTAL_AMOUNT;
+    }
+
+    public void setTOTAL_AMOUNT(int TOTAL_AMOUNT) {
+        this.TOTAL_AMOUNT = TOTAL_AMOUNT;
+    }
+
+    public String getREQUEST_TIME() {
+        return REQUEST_TIME;
+    }
+
+    public void setREQUEST_TIME(String REQUEST_TIME) {
+        this.REQUEST_TIME = REQUEST_TIME;
+    }
+
+    public Timestamp getSUMIT_TIME() {
+        return SUMIT_TIME;
+    }
+
+    public void setSUMIT_TIME(Timestamp SUMIT_TIME) {
+        this.SUMIT_TIME = SUMIT_TIME;
+    }
+
+    public String getPROVIDER() {
+        return PROVIDER;
+    }
+
+    public void setPROVIDER(String PROVIDER) {
+        this.PROVIDER = PROVIDER;
+    }
+
+    public String getCHANNEL() {
+        return CHANNEL;
+    }
+
+    public void setCHANNEL(String CHANNEL) {
+        this.CHANNEL = CHANNEL;
+    }
+
+    public String getRESULT_CODE() {
+        return RESULT_CODE;
+    }
+
+    public void setRESULT_CODE(String RESULT_CODE) {
+        this.RESULT_CODE = RESULT_CODE;
+    }
+
+    public String getOTHER_INFO() {
+        return OTHER_INFO;
+    }
+
+    public void setOTHER_INFO(String OTHER_INFO) {
+        this.OTHER_INFO = OTHER_INFO;
+    }
+
+    public String getDESCRIPTION() {
+        return DESCRIPTION;
+    }
+
+    public void setDESCRIPTION(String DESCRIPTION) {
+        this.DESCRIPTION = DESCRIPTION;
+    }
+    
+}

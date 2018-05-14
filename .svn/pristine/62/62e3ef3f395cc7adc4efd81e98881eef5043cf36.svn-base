@@ -1,0 +1,88 @@
+<%-- 
+    Document   : table
+    Created on : Sep 18, 2017, 12:39:25 AM
+    Author     : Admin
+--%>
+
+<%@page import="com.htc.airtime.model.ChargeAirTime"%>
+<%@page import="com.htc.airtime.components.Helper"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<table class="table table-bordered data-table">
+    <thead>
+        <tr>
+            <th>Stt</th>
+            <th>ID</th>
+            <th>Request</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Xem chi tiết</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%
+            int i = 0;
+            for (ChargeAirTime dt : dts) {
+                i++;
+                int idService = dt.getID();
+        %>
+        <tr class="gradeX">
+            <td style="width:30px;text-align:center"><%= i%></td>
+            <td style="width:30px;text-align:center"><%= dt.getID()%></td>
+            <td style="width:200px;text-align:left">
+                <div>
+                    <b>SysReqId :</b> <%= dt.getSYS_REQUEST_ID()%><br/> 
+                </div>
+                <div>
+                    <b>CpReqId :</b> <%= dt.getCP_REQUEST_ID()%><br/> 
+                </div>
+            </td>
+            <td style="width:130px;text-align:left">
+                <div>
+                    <b>Mã CP :</b> <%= dt.getCP_CODE()%><br/> 
+                </div>
+                <div>
+                    <b>Tên CP :</b> <%= dt.getUSER_NAME()%><br/> 
+                </div>
+                <div>
+                    <b>Mã CP :</b> <%= dt.getCP_CODE()%><br/> <b>Mã GAME :</b> <%= dt.getGAME_CODE()%><br/> 
+                </div>
+            </td>
+            <td style="width:200px;text-align:left">
+                <div>
+                    <b>Số DT :</b> <%= dt.getMSISDN()%><br/> 
+                </div>
+                <div>
+                    <b>Số Tiền :</b> <%= dt.getPRICE()%><br/> 
+                </div>
+                <div>
+                    <b>Mã OTP :</b> <%= dt.getOTP()%><br/> 
+                </div>
+            </td>
+            <td style="width:250px;text-align:left">
+                <div>
+                    <b>Kết quả MPS :</b> <%= dt.getRS_MPS()%><br/> 
+                </div>
+                <div>
+                    <b>Kết quả AHP:</b> <%= dt.getRS_AHP()%><br/> 
+                </div>
+                <div>
+                    <b>Charge Time:</b> <%= dt.getCHARGER_TIME()%><br/> 
+                </div>
+            </td>
+            <td style="width:200px;text-align:left">
+                <div>
+                    <b>Sub Service :</b> <%= dt.getSUB_SERVICE()%><br/> 
+                </div>
+                <div>
+                    <b>Request Time:</b> <%= dt.getREQUEST_TIME()%><br/> 
+                </div>
+            </td>
+            <td>
+                <a href="view.jsp?id=<%= idService%>"> <%= Helper.getImageIcon("view-details", baseUrl)%> Xem chi tiết </a>
+            </td>
+        </tr>
+        <% }%>
+    </tbody>
+</table>

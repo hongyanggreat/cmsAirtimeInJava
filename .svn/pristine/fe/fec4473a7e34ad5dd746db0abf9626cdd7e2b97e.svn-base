@@ -1,0 +1,293 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.htc.airtime.dao;
+
+import com.htc.airtime.components.MyDate;
+import com.htc.airtime.components.Tool;
+import com.htc.airtime.connect.DBPool;
+import com.htc.airtime.model.AirTime;
+import com.htc.airtime.model.OtpAirTime;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import org.apache.log4j.Logger;
+
+/**
+ *
+ * @author Admin
+ */
+public class ResponseAirTimeDAO {
+
+    static final Logger logger = Logger.getLogger(AirTime.class);
+
+    public int countAll() {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        String sql = "SELECT COUNT(*) AS total FROM tbl_airtime_response";
+        int totalCount = 0;
+        try {
+            conn = DBPool.getConnection();
+            pstm = conn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.first()) {
+                totalCount = rs.getInt("total");
+            }
+        } catch (Exception ex) {
+            System.out.println("CO LOI O TRY");
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+
+        return totalCount;
+    }
+
+    public int countAllSearch(String resultCode, String price, String cpCode, String cpName, String cpGame, String formDate, String toDate) {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        String sql = "SELECT COUNT(*) AS total FROM tbl_airtime_response";
+        sql += " WHERE 1=1";
+
+        if (!resultCode.equals("all")) {
+            if (resultCode.equals("0")) {
+                sql += " AND RS_MPS = \"" + resultCode + "\"";
+            } else {
+                sql += " AND RS_MPS != \"0\"";
+            }
+        }
+        if (!price.equals("") && !price.equals("0")) {
+            sql += " AND PRICE = \"" + price+"000" + "\"";;
+        }
+        if (!cpCode.equals("")) {
+            sql += " AND CP_CODE = \"" + cpCode + "\"";;
+        }
+        if (!cpName.equals("")) {
+            sql += " AND USER_NAME = \"" + cpName + "\"";;
+        }
+        if (!cpGame.equals("")) {
+            sql += " AND GAME_CODE = \"" + cpGame + "\"";;
+        }
+        if (!formDate.equals("")) {
+            sql += " AND REQUEST_TIME >= \"" + MyDate.convertDate(formDate, "yyyy-MM-dd") + " 00:00:00\"";
+        }
+        if (!toDate.equals("")) {
+            sql += " AND REQUEST_TIME <= \"" + MyDate.convertDate(toDate, "yyyy-MM-dd") + " 23:59:59\"";
+        }
+        int totalCount = 0;
+        try {
+            conn = DBPool.getConnection();
+            System.out.println("sql: "+sql);
+            pstm = conn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.first()) {
+                totalCount = rs.getInt("total");
+            }
+        } catch (Exception ex) {
+            System.out.println("CO LOI O TRY : countAllSearch");
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+
+        return totalCount;
+    }
+
+    public ArrayList<OtpAirTime> getStatistic(String price, String cpCode, String cpName, String cpGame, String formDate, String toDate) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ArrayList list = new ArrayList();
+
+        try {
+
+            conn = DBPool.getConnection();
+            String sql = "SELECT CP_CODE,USER_NAME,GAME_CODE,RS_MPS,SUM(PRICE) as TOTAL_AMOUNT,COUNT(ID) as TOTAL_REQUEST FROM tbl_airtime_response";
+            
+//            SELECT `CP_CODE`, `GAME_CODE`, `RS_MPS`, SUM(PRICE) as TOTAL_AMOUNT, COUNT(ID) as TOTAL_REQUEST FROM tbl_airtime_response WHERE (`REQUEST_TIME` >= '2017-04-04') AND (`REQUEST_TIME` <= '2017-10-13') AND (`RS_MPS` = '0') GROUP BY `GAME_CODE`, `GAME_CODE`, `RS_MPS`
+            sql += " WHERE 1=1";
+           
+            if (!price.equals("") && !price.equals("0")) {
+                sql += " AND PRICE = \"" + price+"000" + "\"";;
+            }
+            if (!cpCode.equals("")) {
+                sql += " AND CP_CODE = \"" + cpCode + "\"";;
+            }
+            if (!cpName.equals("")) {
+                sql += " AND USER_NAME = \"" + cpName + "\"";;
+            }
+            if (!cpGame.equals("")) {
+                sql += " AND GAME_CODE = \"" + cpGame + "\"";;
+            }
+           
+            if (!formDate.equals("")) {
+                sql += " AND REQUEST_TIME >= \"" + MyDate.convertDate(formDate, "yyyy-MM-dd") + " 00:00:00\"";
+            }
+            if (!toDate.equals("")) {
+                sql += " AND REQUEST_TIME <= \"" + MyDate.convertDate(toDate, "yyyy-MM-dd") + " 23:59:59\"";
+            }
+
+            sql += "GROUP BY GAME_CODE,GAME_CODE,RS_MPS ORDER BY ID DESC" ;
+            System.out.println(sql);
+            pstm = conn.prepareCall(sql);
+//            System.out.println("CAU LENH SQL" + pstm.toString());
+            rs = pstm.executeQuery();
+            try {
+                while (rs.next()) {
+                    OtpAirTime dt = new OtpAirTime();
+                    
+                    dt.setCP_CODE(rs.getString("CP_CODE"));
+                    dt.setGAME_CODE(rs.getString("GAME_CODE"));
+                    dt.setUSER_NAME(rs.getString("USER_NAME"));
+                    dt.setRS_MPS(rs.getString("RS_MPS"));
+                    dt.setTOTAL_AMOUNT(rs.getString("TOTAL_AMOUNT"));
+                    dt.setTOTAL_REQUEST(rs.getString("TOTAL_REQUEST"));
+
+                    list.add(dt);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception ex) {
+            System.out.println("CO LOI O TRY : getListSearch");
+            System.out.println("ex"+ex);
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+        return list;
+    }
+    public ArrayList<OtpAirTime> getListSearch(String resultCode, String price, String cpCode, String cpName, String cpGame, String formDate, String toDate, int limit, int offset) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ArrayList list = new ArrayList();
+
+        try {
+
+            conn = DBPool.getConnection();
+            String sql = "SELECT * FROM tbl_airtime_response";
+            sql += " WHERE 1=1";
+            if (!resultCode.equals("all")) {
+                if (resultCode.equals("0")) {
+                    sql += " AND RS_MPS = \"" + resultCode + "\"";
+                } else {
+                    sql += " AND RS_MPS != \"0\"";
+                }
+            }
+            if (!price.equals("") && !price.equals("0")) {
+                sql += " AND PRICE = \"" + price+"000" + "\"";;
+            }
+            if (!cpCode.equals("")) {
+                sql += " AND CP_CODE = \"" + cpCode + "\"";;
+            }
+            if (!cpName.equals("")) {
+                sql += " AND USER_NAME = \"" + cpName + "\"";;
+            }
+            if (!cpGame.equals("")) {
+                sql += " AND GAME_CODE = \"" + cpGame + "\"";;
+            }
+           
+            if (!formDate.equals("")) {
+                sql += " AND REQUEST_TIME >= \"" + MyDate.convertDate(formDate, "yyyy-MM-dd") + " 00:00:00\"";
+            }
+            if (!toDate.equals("")) {
+                sql += " AND REQUEST_TIME <= \"" + MyDate.convertDate(toDate, "yyyy-MM-dd") + " 23:59:59\"";
+            }
+
+            sql += " LIMIT " + limit + " OFFSET " + offset + " ORDER BY ID DESC";
+            System.out.println(sql);
+            pstm = conn.prepareCall(sql);
+//            System.out.println("CAU LENH SQL" + pstm.toString());
+            rs = pstm.executeQuery();
+            try {
+                while (rs.next()) {
+                    OtpAirTime dt = new OtpAirTime();
+
+                    dt.setID(rs.getInt("ID"));
+                    dt.setSYS_REQUEST_ID(rs.getString("SYS_REQUEST_ID"));
+                    dt.setCP_REQUEST_ID(rs.getString("CP_REQUEST_ID"));
+                    dt.setCP_CODE(rs.getString("CP_CODE"));
+                    dt.setGAME_CODE(rs.getString("GAME_CODE"));
+                    dt.setUSER_NAME(rs.getString("USER_NAME"));
+                    dt.setMSISDN(rs.getString("MSISDN"));
+                    dt.setPRICE(rs.getInt("PRICE"));
+                    dt.setOTP(rs.getString("OTP"));
+                    dt.setRS_MPS(rs.getString("RS_MPS"));
+                    dt.setRS_AHP(rs.getString("RS_AHP"));
+                    dt.setCHARGER_TIME(rs.getString("CHARGER_TIME"));
+                    dt.setSUB_SERVICE(rs.getString("SUB_SERVICE"));
+                    dt.setOTHER_INFO(rs.getString("OTHER_INFO"));
+                    dt.setREQUEST_TIME(rs.getString("REQUEST_TIME"));
+
+                    list.add(dt);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception ex) {
+            System.out.println("CO LOI O TRY : getListSearch");
+            System.out.println("ex"+ex);
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+        return list;
+    }
+
+    public ArrayList<OtpAirTime> getList(int limit, int offset) throws SQLException {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ArrayList list = new ArrayList();
+        try {
+            conn = DBPool.getConnection();
+            String sql = "SELECT * FROM tbl_airtime_response ";
+            sql += " LIMIT " + limit + " OFFSET " + offset + " ORDER BY ID DESC";
+            pstm = conn.prepareCall(sql);
+//            System.out.println("CAU LENH SQL" + pstm.toString());
+            rs = pstm.executeQuery();
+            try {
+                while (rs.next()) {
+                    OtpAirTime dt = new OtpAirTime();
+
+                    dt.setID(rs.getInt("ID"));
+                    dt.setSYS_REQUEST_ID(rs.getString("SYS_REQUEST_ID"));
+                    dt.setCP_REQUEST_ID(rs.getString("CP_REQUEST_ID"));
+                    dt.setCP_CODE(rs.getString("CP_CODE"));
+                    dt.setGAME_CODE(rs.getString("GAME_CODE"));
+                    dt.setUSER_NAME(rs.getString("USER_NAME"));
+                    dt.setMSISDN(rs.getString("MSISDN"));
+                    dt.setPRICE(rs.getInt("PRICE"));
+                    dt.setOTP(rs.getString("OTP"));
+                    dt.setRS_MPS(rs.getString("RS_MPS"));
+                    dt.setRS_AHP(rs.getString("RS_AHP"));
+                    dt.setCHARGER_TIME(rs.getString("CHARGER_TIME"));
+                    dt.setSUB_SERVICE(rs.getString("SUB_SERVICE"));
+                    dt.setOTHER_INFO(rs.getString("OTHER_INFO"));
+                    dt.setREQUEST_TIME(rs.getString("REQUEST_TIME"));
+
+                    list.add(dt);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception ex) {
+            System.out.println("CO LOI O TRY");
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+        return list;
+    }
+}

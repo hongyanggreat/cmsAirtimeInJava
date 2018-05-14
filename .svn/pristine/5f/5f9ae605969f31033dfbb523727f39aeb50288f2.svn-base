@@ -1,0 +1,404 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.htc.airtime.dao;
+
+import com.htc.airtime.components.MyDate;
+import com.htc.airtime.components.Tool;
+import com.htc.airtime.connect.DBConnect;
+//import com.htc.airtime.connect.DBConnect;
+import com.htc.airtime.connect.DBPool;
+import com.htc.airtime.model.Account;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import com.htc.airtime.model.OtpAirTime;
+import org.apache.log4j.Logger;
+
+/**
+ *
+ * @author Admin
+ */
+public class OtpAirTimeDAO {
+
+    static final Logger logger = Logger.getLogger(OtpAirTimeDAO.class);
+
+    public int countAll() {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        String sql = "SELECT COUNT(*) AS total FROM tbl_airtime_otp_request";
+        int totalCount = 0;
+        try {
+            conn = DBPool.getConnection();
+            pstm = conn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.first()) {
+                totalCount = rs.getInt("total");
+            }
+        } catch (Exception ex) {
+            System.out.println("CO LOI O TRY");
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+        return totalCount;
+    }
+
+    public int countAllSearch(String price, String cpCode, String cpName, String cpGame, String msisdn, String formDate, String toDate, ArrayList<Account> arrAcc) {
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        String sql = "SELECT COUNT(*) AS total FROM tbl_airtime_otp_request";
+        sql += " WHERE 1=1";
+        if (arrAcc != null) {
+            sql += " AND USER_NAME IN (";
+            String temp = "";
+            for (Account dt : arrAcc) {
+                temp += ",?";
+            }
+            temp = temp.replaceFirst(",", "");
+            temp += ")";
+            sql += temp;
+        }
+        if (!Tool.checkNull(price) && !price.equals("0")) {
+            sql += " AND PRICE = ?";
+        }
+        if (!Tool.checkNull(cpCode) && !cpCode.equals("all")) {
+            sql += " AND CP_CODE = ?";
+        }
+        if (!Tool.checkNull(cpName) && !cpName.equals("all")) {
+            sql += " AND USER_NAME = ?";
+        }
+        if (!Tool.checkNull(cpGame) && !cpGame.equals("all")) {
+            sql += " AND GAME_CODE = ?";
+        }
+        if (!Tool.checkNull(msisdn)) {
+            sql += " AND MSISDN = ?";
+        }
+
+        if (!formDate.equals("")) {
+            sql += " AND DATEDIFF(REQUEST_TIME,STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') ) >=0";
+        }
+        if (!toDate.equals("")) {
+            sql += " AND DATEDIFF(REQUEST_TIME,STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') ) <=0";
+        }
+        int totalCount = 0;
+        try {
+            conn = DBPool.getConnection();
+            System.out.println("sql: " + sql);
+            pstm = conn.prepareStatement(sql);
+            int i = 1;
+            if (arrAcc != null) {
+                for (Account dt : arrAcc) {
+                    pstm.setString(i++, dt.getUserName());
+                }
+            }
+            if (!Tool.checkNull(price) && !price.equals("0")) {
+                pstm.setString(i++, price + "000");
+            }
+            if (!Tool.checkNull(cpCode) && !cpCode.equals("all")) {
+                pstm.setString(i++, cpCode);
+            }
+            if (!Tool.checkNull(cpName) && !cpName.equals("all")) {
+                pstm.setString(i++, cpName);
+            }
+            if (!Tool.checkNull(cpGame) && !cpGame.equals("all")) {
+                pstm.setString(i++, cpGame);
+            }
+            if (!Tool.checkNull(msisdn)) {
+                pstm.setString(i++, msisdn);
+            }
+            pstm.setString(i++, formDate + " 00:00:00");
+            pstm.setString(i++, toDate + " 23:59:59");
+            rs = pstm.executeQuery();
+            if (rs.first()) {
+                totalCount = rs.getInt("total");
+            }
+        } catch (Exception ex) {
+            System.out.println("CO LOI O TRY : countAllSearch");
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+
+        return totalCount;
+    }
+
+    public ArrayList<OtpAirTime> getStatistic(String price, String cpCode, String cpName, String cpGame, String msisdn, String formDate, String toDate, ArrayList<Account> arrAcc) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ArrayList list = new ArrayList();
+
+        String sql = "SELECT CP_CODE,USER_NAME,GAME_CODE,RS_MPS,SUM(PRICE) as TOTAL_AMOUNT,COUNT(ID) as TOTAL_REQUEST FROM tbl_airtime_otp_request";
+
+        sql += " WHERE 1=1";
+        if (arrAcc != null) {
+            sql += " AND USER_NAME IN (";
+            String temp = "";
+            for (Account dt : arrAcc) {
+                temp += ",?";
+            }
+            temp = temp.replaceFirst(",", "");
+            temp += ")";
+            sql += temp;
+        } else {
+//            System.out.println("BAN CO FULL QUYEN NEN KHONG CAN CHUC NANG NAY");
+        }
+
+        if (!Tool.checkNull(price) && !price.equals("0")) {
+            sql += " AND PRICE = ?";
+        }
+        if (!Tool.checkNull(cpCode) && !cpCode.equals("all")) {
+            sql += " AND CP_CODE = ?";
+        }
+        if (!Tool.checkNull(cpName) && !cpName.equals("all")) {
+            sql += " AND USER_NAME = ?";
+        }
+        if (!Tool.checkNull(cpGame) && !cpGame.equals("all")) {
+            sql += " AND GAME_CODE = ?";
+        }
+        if (!Tool.checkNull(msisdn)) {
+            sql += " AND MSISDN = ?";
+        }
+
+        if (!formDate.equals("")) {
+            sql += " AND DATEDIFF(REQUEST_TIME,STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') ) >=0";
+        }
+        if (!toDate.equals("")) {
+            sql += " AND DATEDIFF(REQUEST_TIME,STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') ) <=0";
+        }
+        sql += " GROUP BY USER_NAME,CP_CODE,GAME_CODE,RS_MPS";
+        sql += " ORDER BY USER_NAME DESC";
+        try {
+
+            conn = DBPool.getConnection();
+//            conn = DBConnect.getConnection();
+            pstm = conn.prepareCall(sql);
+            int i = 1;
+            if (arrAcc != null) {
+                for (Account dt : arrAcc) {
+                    pstm.setString(i++, dt.getUserName());
+                }
+            }
+            if (!Tool.checkNull(price) && !price.equals("0")) {
+                pstm.setString(i++, price + "000");
+            }
+            if (!Tool.checkNull(cpCode) && !cpCode.equals("all")) {
+                pstm.setString(i++, cpCode);
+            }
+            if (!Tool.checkNull(cpName) && !cpName.equals("all")) {
+                pstm.setString(i++, cpName);
+            }
+            if (!Tool.checkNull(cpGame) && !cpGame.equals("all")) {
+                pstm.setString(i++, cpGame);
+            }
+            if (!Tool.checkNull(msisdn)) {
+                pstm.setString(i++, msisdn);
+            }
+            pstm.setString(i++, formDate + " 00:00:00");
+            pstm.setString(i++, toDate + " 23:59:59");
+            System.out.println("CAU LENH:" + pstm);
+            rs = pstm.executeQuery();
+            try {
+                while (rs.next()) {
+                    OtpAirTime dt = new OtpAirTime();
+
+                    dt.setCP_CODE(rs.getString("CP_CODE"));
+                    dt.setGAME_CODE(rs.getString("GAME_CODE"));
+                    dt.setUSER_NAME(rs.getString("USER_NAME"));
+                    dt.setRS_MPS(rs.getString("RS_MPS"));
+                    dt.setTOTAL_AMOUNT(rs.getString("TOTAL_AMOUNT"));
+                    dt.setTOTAL_REQUEST(rs.getString("TOTAL_REQUEST"));
+
+                    list.add(dt);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception ex) {
+            System.out.println("DCM SAI O DAY HA ");
+            System.out.println("ex" + ex);
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+//            DBConnect.freeConn(rs, pstm, conn);
+        }
+        return list;
+    }
+
+    public ArrayList<OtpAirTime> getListSearch(String price, String cpCode, String cpName, String cpGame, String msisdn, String formDate, String toDate, int limit, int offset, ArrayList<Account> arrAcc) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ArrayList list = new ArrayList();
+
+        String sql = "SELECT * FROM tbl_airtime_otp_request";
+        sql += " WHERE 1=1";
+        if (arrAcc != null) {
+            System.out.println("BAN CHI CO QUYEN XEM DU LIEU CUA CHINH BẠN HOAC CON CUA BAN THOI");
+            sql += " AND USER_NAME IN (";
+            String temp = "";
+            for (Account dt : arrAcc) {
+                temp += ",?";
+            }
+            temp = temp.replaceFirst(",", "");
+            temp += ")";
+            sql += temp;
+        } else {
+            System.out.println("BAN CO FULL QUYEN NEN KHONG CAN CHUC NANG NAY");
+        }
+        if (!Tool.checkNull(price) && !price.equals("0")) {
+            sql += " AND PRICE = ?";
+        }
+        if (!Tool.checkNull(cpCode) && !cpCode.equals("all")) {
+            sql += " AND CP_CODE = ?";
+        }
+        if (!Tool.checkNull(cpName) && !cpName.equals("all")) {
+            sql += " AND USER_NAME = ?";
+        }
+        if (!Tool.checkNull(cpGame) && !cpGame.equals("all")) {
+            sql += " AND GAME_CODE = ?";
+        }
+        if (!Tool.checkNull(msisdn)) {
+            sql += " AND MSISDN = ?";
+        }
+
+        if (!formDate.equals("")) {
+            sql += " AND DATEDIFF(REQUEST_TIME,STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') ) >=0";
+        }
+        if (!toDate.equals("")) {
+            sql += " AND DATEDIFF(REQUEST_TIME,STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') ) <=0";
+        }
+        sql += " ORDER BY ID DESC";
+        sql += " LIMIT ? OFFSET ?";
+
+        try {
+
+            conn = DBPool.getConnection();
+            pstm = conn.prepareCall(sql);
+            int i = 1;
+            if (arrAcc != null) {
+                for (Account dt : arrAcc) {
+                    pstm.setString(i++, dt.getUserName());
+                }
+            }
+            if (!Tool.checkNull(price) && !price.equals("0")) {
+                pstm.setString(i++, price + "000");
+            }
+            if (!Tool.checkNull(cpCode) && !cpCode.equals("all")) {
+                pstm.setString(i++, cpCode);
+            }
+            if (!Tool.checkNull(cpName) && !cpName.equals("all")) {
+                pstm.setString(i++, cpName);
+            }
+            if (!Tool.checkNull(cpGame) && !cpGame.equals("all")) {
+                pstm.setString(i++, cpGame);
+            }
+            if (!Tool.checkNull(msisdn)) {
+                pstm.setString(i++, msisdn);
+            }
+            pstm.setString(i++, formDate + " 00:00:00");
+            pstm.setString(i++, toDate + " 23:59:59");
+            pstm.setInt(i++, limit);
+            pstm.setInt(i++, offset);
+            System.out.println(pstm);
+            rs = pstm.executeQuery();
+            try {
+                while (rs.next()) {
+                    OtpAirTime dt = new OtpAirTime();
+
+                    dt.setID(rs.getInt("ID"));
+                    dt.setSYS_REQUEST_ID(rs.getString("SYS_REQUEST_ID"));
+                    dt.setCP_REQUEST_ID(rs.getString("CP_REQUEST_ID"));
+                    dt.setCP_CODE(rs.getString("CP_CODE"));
+                    dt.setGAME_CODE(rs.getString("GAME_CODE"));
+                    dt.setUSER_NAME(rs.getString("USER_NAME"));
+                    dt.setMSISDN(rs.getString("MSISDN"));
+                    dt.setPRICE(rs.getInt("PRICE"));
+                    dt.setOTP(rs.getString("OTP"));
+                    dt.setRS_MPS(rs.getString("RS_MPS"));
+                    dt.setRS_AHP(rs.getString("RS_AHP"));
+                    dt.setCHARGER_TIME(rs.getString("CHARGER_TIME"));
+                    dt.setSUB_SERVICE(rs.getString("SUB_SERVICE"));
+                    dt.setOTHER_INFO(rs.getString("OTHER_INFO"));
+                    dt.setREQUEST_TIME(rs.getString("REQUEST_TIME"));
+
+                    list.add(dt);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception ex) {
+            System.out.println("CO LOI O TRY : ");
+            System.out.println("ex" + ex);
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+        return list;
+    }
+
+    public ArrayList<OtpAirTime> getList(int limit, int offset) throws SQLException {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ArrayList list = null;
+        try {
+            conn = DBPool.getConnection();
+            String sql = "SELECT * FROM tbl_airtime_otp_request";
+
+            sql += " ORDER BY ID DESC";
+            sql += " LIMIT ? OFFSET ?";
+            pstm = conn.prepareCall(sql);
+            int i = 1;
+            pstm.setInt(i++, limit);
+            pstm.setInt(i++, offset);
+            System.out.println("CAU LENH SQL" + pstm);
+            rs = pstm.executeQuery();
+            list = new ArrayList();
+            try {
+                while (rs.next()) {
+                    OtpAirTime dt = new OtpAirTime();
+
+                    dt.setID(rs.getInt("ID"));
+                    dt.setSYS_REQUEST_ID(rs.getString("SYS_REQUEST_ID"));
+                    dt.setCP_REQUEST_ID(rs.getString("CP_REQUEST_ID"));
+                    dt.setCP_CODE(rs.getString("CP_CODE"));
+                    dt.setGAME_CODE(rs.getString("GAME_CODE"));
+                    dt.setUSER_NAME(rs.getString("USER_NAME"));
+                    dt.setMSISDN(rs.getString("MSISDN"));
+                    dt.setPRICE(rs.getInt("PRICE"));
+                    dt.setOTP(rs.getString("OTP"));
+                    dt.setRS_MPS(rs.getString("RS_MPS"));
+                    dt.setRS_AHP(rs.getString("RS_AHP"));
+                    dt.setCHARGER_TIME(rs.getString("CHARGER_TIME"));
+                    dt.setSUB_SERVICE(rs.getString("SUB_SERVICE"));
+                    dt.setOTHER_INFO(rs.getString("OTHER_INFO"));
+                    dt.setREQUEST_TIME(rs.getString("REQUEST_TIME"));
+
+                    list.add(dt);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception ex) {
+            System.out.println("--------> CO LOI O TRY getList");
+            logger.error(Tool.getLogMessage(ex));
+        } finally {
+            DBPool.freeConn(rs, pstm, conn);
+        }
+        return list;
+    }
+
+}
